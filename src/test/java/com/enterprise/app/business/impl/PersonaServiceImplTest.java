@@ -8,8 +8,6 @@ import com.enterprise.app.model.dto.PersonaDto;
 import com.enterprise.app.model.entity.PersonaEntity;
 import com.enterprise.app.model.enums.Genero;
 import com.enterprise.app.repository.PersonaRepository;
-import com.enterprise.app.utils.JsonUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.smallrye.mutiny.Uni;
 import jakarta.validation.Validation;
 import java.util.List;
@@ -50,8 +48,7 @@ class PersonaServiceImplTest {
         PersonaServiceImpl service = new PersonaServiceImpl(
                 repository,
                 new PersonaValidator(Validation.buildDefaultValidatorFactory().getValidator()),
-                new PersonaMapper(),
-                new JsonUtil(new ObjectMapper()));
+                new PersonaMapper());
         List<PersonaDto> personas = java.util.stream.IntStream.range(0, 250)
                 .mapToObj(index -> persona("DOC-" + index, index + 2))
                 .toList();

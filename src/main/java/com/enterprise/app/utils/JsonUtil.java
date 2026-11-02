@@ -1,25 +1,29 @@
 package com.enterprise.app.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import java.util.List;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
-@ApplicationScoped
+@Slf4j
+@UtilityClass
 public class JsonUtil {
-    private final ObjectMapper objectMapper;
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    @Inject
-    public JsonUtil(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public static String serializar(Object valor) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(valor);
+        } catch (JsonProcessingException exception) {
+            throw new IllegalStateException("No se pudo serializar el valor JSON.", exception);
+        }
     }
 
-    public String serializar(List<String> valores) {
+    public static <T> T deserializar(String json, TypeReference<T> type) {
         try {
-            return objectMapper.writeValueAsString(valores);
+            return OBJECT_MAPPER.readValue(json, type);
         } catch (JsonProcessingException exception) {
-            throw new IllegalStateException("No se pudo serializar la lista de documentos.", exception);
+            throw new IllegalStateException("No se pudo deserializar el valor JSON.", exception);
         }
     }
 }

@@ -29,18 +29,15 @@ public class PersonaServiceImpl implements PersonaService {
     private final PersonaRepository repository;
     private final PersonaValidator personaValidator;
     private final PersonaMapper personaMapper;
-    private final JsonUtil jsonUtil;
 
     @Inject
     public PersonaServiceImpl(
             PersonaRepository repository,
             PersonaValidator personaValidator,
-            PersonaMapper personaMapper,
-            JsonUtil jsonUtil) {
+            PersonaMapper personaMapper) {
         this.repository = repository;
         this.personaValidator = personaValidator;
         this.personaMapper = personaMapper;
-        this.jsonUtil = jsonUtil;
     }
 
     @Override
@@ -103,7 +100,7 @@ public class PersonaServiceImpl implements PersonaService {
 
         log.info("Consulta masiva de documentos iniciada. transactionId={}, documentos={}",
                 transactionId, documentos.size());
-        return Uni.createFrom().item(() -> jsonUtil.serializar(documentos))
+        return Uni.createFrom().item(() -> JsonUtil.serializar(documentos))
                 .flatMap(repository::obtenerDocumentosExistentes)
                 .map(documentosEncontrados -> documentosEncontrados.stream()
                         .map(documento -> documento.trim().toUpperCase(Locale.ROOT))
